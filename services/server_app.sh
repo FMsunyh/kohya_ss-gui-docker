@@ -12,10 +12,12 @@
 # Start the first process
 /usr/sbin/sshd -D &
 
-/root/miniconda3/bin/python3  -m lmdeploy.serve.gradio.app /root/internlm/models/turbomind-internlm-chat-20b-w4 --server_name 0.0.0.0 --server_port 7860 &
+# python3 ./kohya_gui.py --inbrowser --headless --listen 0.0.0.0 --server_port 7860 &
 
 # Start the second process
-# /opt/conda/envs/env/bin/jupyter lab  --allow-root --no-browser  --port=8889 --ip=0.0.0.0 &
+jupyter lab  --allow-root --no-browser  --port=8889 --ip=0.0.0.0 &
+
+python3 ./kohya_gui.py --inbrowser --headless --listen 0.0.0.0 --server_port 7860 &
 
 # Wait for any process to exit
 wait -n

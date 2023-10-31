@@ -2,12 +2,13 @@ version: "3.8"
 services:
   kohya-ss-gui:
     container_name: kohya-ss-gui
-    image: fmsunyh/kohya-ss-gui:22.1.0
+    image: registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.1.0
     build:
       context: ./services
     ports:
       - 127.0.0.1:6000:3000
       - 6860:7860
+      - 8889:8889
       - 6006:6006
     tty: true
     ipc: host
@@ -18,11 +19,11 @@ services:
     tmpfs:
       - /tmp      
     volumes:
-      - ./dataset:/dataset
-      - ./dataset/.cache/triton:/root/.triton
-      - ./dataset/.cache/config:/root/.config
-      - ./dataset/.cache/nv:/root/.nv
-      - ./dataset/.cache/keras:/root/.keras 
+      - ./dataset/kohya-ss-gui/:/userdata/kohya-ss-gui/
+      - ./dataset/kohya-ss-gui/.cache/triton:/root/.triton
+      - ./dataset/kohya-ss-gui/.cache/config:/root/.config
+      - ./dataset/kohya-ss-gui/.cache/nv:/root/.nv
+      - ./dataset/kohya-ss-gui/.cache/keras:/root/.keras 
       - /tmp/.X11-unix:/tmp/.X11-unix
     deploy:
       resources:

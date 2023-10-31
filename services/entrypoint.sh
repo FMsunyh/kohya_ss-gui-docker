@@ -4,8 +4,8 @@ set -Eeuo pipefail
 
 declare -A MOUNTS
 
-MOUNTS["/root/.cache"]="/dataset/.cache"
-MOUNTS["${ROOT}/SmilingWolf"]="/dataset/SmilingWolf"
+MOUNTS["/root/.cache"]="/userdata/kohya-ss-gui/.cache"
+MOUNTS["${ROOT}/SmilingWolf"]="/userdata/kohya-ss-gui/SmilingWolf"
 
 for to_path in "${!MOUNTS[@]}"; do
   set -Eeuo pipefail

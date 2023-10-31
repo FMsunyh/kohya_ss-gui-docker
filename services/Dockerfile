@@ -8,26 +8,52 @@ FROM fmsunyh/kohya-ss-gui:21.8.9
 ENV ROOT=/kohya-ss-gui
 WORKDIR ${ROOT}
 
+RUN rm -rf ${ROOT}/*
+
 COPY --from=download /repositories/kohya-ss-gui ${ROOT}
 
-# Install requirements
-# COPY ./requirements.txt ./requirements_linux_docker.txt ./
-# COPY ./setup/docker_setup.py ./setup.py
+RUN --mount=type=cache,target=/var/cache/apt \
+  apt-get update && \
+  # we need those
+  apt-get install -y openssh-server vim  aria2
+
+USER root
+
+RUN echo 'root:l6y#VJWJA4LGr1eI' | chpasswd 
+
+##config ssh
+RUN echo 'Port 22' >> /etc/ssh/sshd_config 
+RUN echo 'PermitRootLogin yes' >>  /etc/ssh/sshd_config
+RUN mkdir /var/run/sshd
+
+# RUN --mount=type=cache,target=/cache --mount=type=cache,target=/root/.cache/pip \
+#     pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
+#     pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+
+
+RUN python3 -m pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/
+RUN python3 -m pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 COPY ./entrypoint.sh ./entrypoint.sh
+COPY  ./requirements.txt /opt/requirements.txt
+RUN python3 -m pip install -r /opt/requirements.txt
 
-RUN --mount=type=cache,target=/root/.cache/pip \
-   pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
-   pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 # Replace pillow with pillow-simd
 RUN python3 -m pip uninstall -y pillow && \
     CC="cc -mavx2" python3 -m pip install -U --force-reinstall pillow-simd
 
-USER root
+COPY  ./server_app.sh /opt/server_app.sh
+
+RUN  jupyter server --generate-config
+COPY  ./jupyter_server_config.json /root/.jupyter/jupyter_server_config.json
+
+ENV LD_PRELOAD=libtcmalloc.so
+
+EXPOSE 22
+EXPOSE 8889
+EXPOSE 6860
+EXPOSE 6006
 
 STOPSIGNAL SIGINT
-ENV LD_PRELOAD=libtcmalloc.so
-# ENV PATH="$PATH:/home/appuser/.local/bin"
-ENTRYPOINT ["./entrypoint.sh"]
-CMD python3 "./kohya_gui.py" ${CLI_ARGS} --listen 0.0.0.0 --server_port 7860
+ENTRYPOINT ["/bin/bash","./entrypoint.sh", "/opt/server_app.sh"]

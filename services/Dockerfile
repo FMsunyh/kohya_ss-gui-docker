@@ -16,8 +16,9 @@ COPY --from=download /repositories/kohya-ss-gui ${ROOT}
 
 COPY ./entrypoint.sh ./entrypoint.sh
 
-RUN python3 -m pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/
-RUN python3 -m pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+RUN --mount=type=cache,target=/root/.cache/pip \
+   pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
+   pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 # Replace pillow with pillow-simd
 RUN python3 -m pip uninstall -y pillow && \

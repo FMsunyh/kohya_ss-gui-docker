@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  kohya-ss-gui:
+    container_name: kohya-ss-gui
+    image: fmsunyh/kohya-ss-gui:22.1.0
+    build:
+      context: ./services
+    ports:
+      - 127.0.0.1:6000:3000
+      - 6860:7860
+      - 6006:6006
+    tty: true
+    ipc: host
+    environment:
+      CLI_ARGS: "--inbrowser --headless"
+      SAFETENSORS_FAST_GPU: 1
+      DISPLAY: $DISPLAY
+    tmpfs:
+      - /tmp      
+    volumes:
+      - ./dataset:/dataset
+      - ./dataset/.cache/triton:/root/.triton
+      - ./dataset/.cache/config:/root/.config
+      - ./dataset/.cache/nv:/root/.nv
+      - ./dataset/.cache/keras:/root/.keras 
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+    restart: always

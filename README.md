@@ -16,7 +16,7 @@ sudo docker pull registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.1.0
 
 ## 启动容器
 ```bash
-sudo docker run --gpus all -it  -p 8889:8889 9090:22 6006:6006 6860:6860 -v <local>/userdata/:/userdata/ --rm registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.1.0
+sudo docker run --gpus all -it  -p 8889:8889 9090:22 6006:6006 6860:7860 -v <local>/userdata/:/userdata/ --rm registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.1.0
 ```
 云端目录：/userdata/kohya-ss-gui
 

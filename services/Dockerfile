@@ -16,15 +16,21 @@ COPY --from=download /repositories/kohya-ss-gui ${ROOT}
 # COPY ./requirements.txt ./requirements_linux_docker.txt ./
 # COPY ./setup/docker_setup.py ./setup.py
 
-COPY ./entrypoint.sh ./entrypoint.sh
-COPY ./src/make_captions_by_git.py /kohya-ss-gui/finetune/make_captions_by_git.py
+RUN --mount=type=cache,target=/root/.cache/pip \
+  pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
+  pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
-RUN python3 -m pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
-RUN python3 -m pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+# RUN python3 -m pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/
+# RUN python3 -m pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 # Replace pillow with pillow-simd
-RUN python3 -m pip uninstall -y pillow && \
-    CC="cc -mavx2" python3 -m pip install -U --force-reinstall pillow-simd
+# RUN python3 -m pip uninstall -y pillow && \
+#     CC="cc -mavx2" python3 -m pip install -U --force-reinstall pillow-simd
+
+COPY ./entrypoint.sh ./entrypoint.sh
+COPY ./src/make_captions_by_git.py /kohya-ss-gui/finetune/make_captions_by_git.py
+COPY ./src/requirements_linux_docker.txt /kohya-ss-gui/requirements_linux_docker.txt
+
 
 USER root
 

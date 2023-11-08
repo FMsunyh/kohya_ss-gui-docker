@@ -10,7 +10,7 @@ WORKDIR ${ROOT}
 
 RUN rm -rf ${ROOT}/*
 
-COPY --from=download /repositories/kohya-ss-gui ${ROOT}
+COPY --from=download /repositories/kohya-ss-gui ${ROOT} 
 
 RUN --mount=type=cache,target=/var/cache/apt \
   apt-get update && \
@@ -47,6 +47,9 @@ COPY  ./server_app.sh /opt/server_app.sh
 
 RUN  jupyter server --generate-config
 COPY  ./jupyter_server_config.json /root/.jupyter/jupyter_server_config.json
+
+COPY .src/make_captions_by_git.py /kohya-ss-gui/finetune/make_captions_by_git.py
+
 
 ENV LD_PRELOAD=libtcmalloc.so
 

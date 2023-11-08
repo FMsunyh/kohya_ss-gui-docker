@@ -2,7 +2,7 @@ version: "3.8"
 services:
   kohya-ss-gui:
     container_name: kohya-ss-gui
-    image: registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.1.0
+    image: registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.1.1
     build:
       context: ./services
     ports:

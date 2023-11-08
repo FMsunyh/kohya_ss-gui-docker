@@ -26,13 +26,15 @@ RUN echo 'Port 22' >> /etc/ssh/sshd_config
 RUN echo 'PermitRootLogin yes' >>  /etc/ssh/sshd_config
 RUN mkdir /var/run/sshd
 
-# RUN --mount=type=cache,target=/cache --mount=type=cache,target=/root/.cache/pip \
-#     pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
-#     pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+COPY ./src/requirements_linux_docker.txt /kohya-ss-gui/requirements_linux_docker.txt
+
+RUN --mount=type=cache,target=/cache --mount=type=cache,target=/root/.cache/pip \
+    pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
+    pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 
-RUN python3 -m pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/
-RUN python3 -m pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+# RUN python3 -m pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/
+# RUN python3 -m pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 COPY ./entrypoint.sh ./entrypoint.sh
 COPY  ./requirements.txt /opt/requirements.txt
@@ -47,9 +49,12 @@ COPY  ./server_app.sh /opt/server_app.sh
 
 RUN  jupyter server --generate-config
 COPY  ./jupyter_server_config.json /root/.jupyter/jupyter_server_config.json
+COPY ./src/make_captions_by_git.py /kohya-ss-gui/finetune/make_captions_by_git.py
 
-COPY .src/make_captions_by_git.py /kohya-ss-gui/finetune/make_captions_by_git.py
-
+COPY ./data/huggingface/hub/models--bert-base-uncased  /root/.cache/huggingface/hub/models--bert-base-uncased
+COPY ./data/huggingface/hub/models--openai--clip-vit-large-patch14  /root/.cache/huggingface/hub/models--openai--clip-vit-large-patch14
+COPY ./data/huggingface/hub/models--microsoft--git-large-textcaps  /root/.cache/huggingface/hub/models--microsoft--git-large-textcaps
+COPY ./data/pretrain  /root/pretrain
 
 ENV LD_PRELOAD=libtcmalloc.so
 
@@ -59,4 +64,4 @@ EXPOSE 6860
 EXPOSE 6006
 
 STOPSIGNAL SIGINT
-ENTRYPOINT ["/bin/bash","./entrypoint.sh", "/opt/server_app.sh"]
+ENTRYPOINT ["/bin/bash", "/opt/server_app.sh"]

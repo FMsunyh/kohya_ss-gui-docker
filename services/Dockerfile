@@ -17,9 +17,10 @@ COPY --from=download /repositories/kohya-ss-gui ${ROOT}
 # COPY ./setup/docker_setup.py ./setup.py
 
 COPY ./entrypoint.sh ./entrypoint.sh
+COPY ./src/make_captions_by_git.py /kohya-ss-gui/finetune/make_captions_by_git.py
 
-RUN python3 -m   pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
-RUN python3 -m   pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+RUN python3 -m pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
+RUN python3 -m pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 # Replace pillow with pillow-simd
 RUN python3 -m pip uninstall -y pillow && \

@@ -3,6 +3,12 @@
 用于训练大模型和Lora模型的镜像
 
 ## 更新日记
+- kuhya-ss-gui 22.2.2
+  - 汉化版本
+  - ssh
+  - filebrowser
+  - jupyter lab禁用
+   
 - kuhya-ss-gui 22.2.1
   - 汉化版本
 

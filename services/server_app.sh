@@ -15,8 +15,13 @@
 # python3 ./kohya_gui.py --inbrowser --headless --listen 0.0.0.0 --server_port 7860 &
 
 # Start the second process
-jupyter lab  --allow-root --no-browser  --port=8889 --ip=0.0.0.0 &
+# jupyter lab  --allow-root --no-browser  --port=8889 --ip=0.0.0.0 &
 
+/opt/filebrowser/filebrowser config set --address 0.0.0.0 --port 8080  --config /opt/filebrowser/.filebrowser.json
+cd /opt/filebrowser/
+./filebrowser  &
+
+cd /kohya-ss-gui
 python3 ./kohya_gui.py --inbrowser --headless --listen 0.0.0.0 --server_port 7860 --language zh-CN &
 
 # Wait for any process to exit

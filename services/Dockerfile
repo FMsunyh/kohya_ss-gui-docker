@@ -58,12 +58,16 @@ COPY ./data/pretrain  /root/pretrain
 COPY ./data/torch  /root/.cache/torch
 COPY ./data/huggingface/hub/models--laion--CLIP-ViT-bigG-14-laion2B-39B-b160k  /root/.cache/huggingface/hub/models--laion--CLIP-ViT-bigG-14-laion2B-39B-b160k
 
+
+COPY ./data/filebrowser  /opt/filebrowser
+
 ENV LD_PRELOAD=libtcmalloc.so
 
 EXPOSE 22
 EXPOSE 8889
 EXPOSE 6860
 EXPOSE 6006
+EXPOSE 8080
 
 STOPSIGNAL SIGINT
 ENTRYPOINT ["/bin/bash", "/opt/server_app.sh"]

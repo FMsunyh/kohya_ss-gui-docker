@@ -2,7 +2,7 @@ version: "3.8"
 services:
   kohya-ss-gui:
     container_name: kohya-ss-gui
-    image: registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.2.1
+    image: registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.2.2
     build:
       context: ./services
     ports:
@@ -10,6 +10,7 @@ services:
       - 6860:7860
       - 8889:8889
       - 6006:6006
+      - 8080:8080
       - 9090:22
     tty: true
     ipc: host

@@ -1,7 +1,7 @@
 FROM alpine/git:2.36.2 as download
 
 COPY clone.sh /clone.sh
-RUN . /clone.sh kohya-ss-gui https://github.com/bmaltais/kohya_ss.git  0ce88bba71c069b70ca7609efce3b7d4463c6dc0
+RUN . /clone.sh kohya-ss-gui https://github.com/bmaltais/kohya_ss.git  17f58c8bb9bc38773a870df58e1ae788abf6753b
 
 FROM fmsunyh/kohya-ss-gui:21.8.9
 
@@ -42,8 +42,8 @@ RUN python3 -m pip install -r /opt/requirements.txt
 
 
 # Replace pillow with pillow-simd
-RUN python3 -m pip uninstall -y pillow && \
-    CC="cc -mavx2" python3 -m pip install -U --force-reinstall pillow-simd
+# RUN python3 -m pip uninstall -y pillow && \
+#     CC="cc -mavx2" python3 -m pip install -U --force-reinstall pillow-simd
 
 COPY  ./server_app.sh /opt/server_app.sh
 
@@ -55,6 +55,8 @@ COPY ./data/huggingface/hub/models--bert-base-uncased  /root/.cache/huggingface/
 COPY ./data/huggingface/hub/models--openai--clip-vit-large-patch14  /root/.cache/huggingface/hub/models--openai--clip-vit-large-patch14
 COPY ./data/huggingface/hub/models--microsoft--git-large-textcaps  /root/.cache/huggingface/hub/models--microsoft--git-large-textcaps
 COPY ./data/pretrain  /root/pretrain
+COPY ./data/torch  /root/.cache/torch
+COPY ./data/huggingface/hub/models--laion--CLIP-ViT-bigG-14-laion2B-39B-b160k  /root/.cache/huggingface/hub/models--laion--CLIP-ViT-bigG-14-laion2B-39B-b160k
 
 ENV LD_PRELOAD=libtcmalloc.so
 

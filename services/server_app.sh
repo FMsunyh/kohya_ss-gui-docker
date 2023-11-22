@@ -17,7 +17,7 @@
 # Start the second process
 jupyter lab  --allow-root --no-browser  --port=8889 --ip=0.0.0.0 &
 
-python3 ./kohya_gui.py --inbrowser --headless --listen 0.0.0.0 --server_port 7860 &
+python3 ./kohya_gui.py --inbrowser --headless --listen 0.0.0.0 --server_port 7860 --language zh-CN &
 
 # Wait for any process to exit
 wait -n

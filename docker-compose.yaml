@@ -2,7 +2,7 @@ version: "3.8"
 services:
   kohya-ss-gui:
     container_name: kohya-ss-gui
-    image: registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.2.2
+    image: registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.3.1
     build:
       context: ./services
     ports:
@@ -19,19 +19,19 @@ services:
       SAFETENSORS_FAST_GPU: 1
       DISPLAY: $DISPLAY
     tmpfs:
-      - /tmp      
+      - /tmp
     volumes:
       - ./dataset/kohya-ss-gui/:/userdata/kohya-ss-gui/
       - ./dataset/kohya-ss-gui/.cache/triton:/root/.triton
       - ./dataset/kohya-ss-gui/.cache/config:/root/.config
       - ./dataset/kohya-ss-gui/.cache/nv:/root/.nv
-      - ./dataset/kohya-ss-gui/.cache/keras:/root/.keras 
+      - ./dataset/kohya-ss-gui/.cache/keras:/root/.keras
       - /tmp/.X11-unix:/tmp/.X11-unix
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
-              device_ids: ['0']
-              capabilities: [gpu]
+              device_ids: [ '0' ]
+              capabilities: [ gpu ]
     restart: always

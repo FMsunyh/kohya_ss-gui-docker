@@ -1,7 +1,7 @@
 FROM alpine/git:2.36.2 as download
 
 COPY clone.sh /clone.sh
-RUN . /clone.sh kohya-ss-gui https://github.com/bmaltais/kohya_ss.git  17f58c8bb9bc38773a870df58e1ae788abf6753b
+RUN . /clone.sh kohya-ss-gui https://github.com/bmaltais/kohya_ss.git  a18bffc8b44bea24ec0f4c4934336b4133b0e93e
 
 FROM fmsunyh/kohya-ss-gui:21.8.9
 
@@ -29,8 +29,8 @@ RUN mkdir /var/run/sshd
 COPY ./src/requirements_linux_docker.txt /kohya-ss-gui/requirements_linux_docker.txt
 
 RUN --mount=type=cache,target=/cache --mount=type=cache,target=/root/.cache/pip \
-    pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
-    pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+  pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/ \
+  pip install -r ./requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 
 
 # RUN python3 -m pip install -r ./requirements_linux_docker.txt  -i https://mirrors.aliyun.com/pypi/simple/

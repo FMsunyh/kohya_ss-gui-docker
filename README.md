@@ -3,6 +3,18 @@
 用于训练大模型和Lora模型的镜像
 
 ## 更新日记
+## kuhya-ss-gui 22.3.1
+
+### 更新内容
+  - 更新 filebrowser 2.26.0
+  - 更新 kuhya-ss-gui 22.3.1
+
+### 拉取镜像
+```bash
+sudo docker pull registry.cn-shenzhen.aliyuncs.com/ai_base/kohya-ss-gui:22.3.1
+```
+
+
 - kuhya-ss-gui 22.2.2
   - 汉化版本
   - ssh

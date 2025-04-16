@@ -12,7 +12,6 @@ wd14_tagger_model
 cudnn_windows
 
 # Cache and temporary files
-.cache
 .DS_Store
 
 # Scripts and executables
@@ -26,7 +25,6 @@ wandb
 
 # Setup and logs
 setup.log
-logs
 
 # Miscellaneous
 uninstall.txt
@@ -45,6 +43,5 @@ requirements_tmp_for_setup.txt
 
 *.npz
 presets/*/user_presets/*
-dataset/
+
 services/data
-models

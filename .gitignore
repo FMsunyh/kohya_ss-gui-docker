@@ -45,3 +45,7 @@ requirements_tmp_for_setup.txt
 presets/*/user_presets/*
 
 services/data
+
+.cache
+dataset
+models

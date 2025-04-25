@@ -6,13 +6,20 @@
   --num_machines=1 \
   --num_cpu_threads_per_process=2 \
   /app/sd-scripts/flux_train_network.py \
+  --pretrained_model_name_or_path=/app/models/unet/flux1-dev-fp8.safetensors \
+  --t5xxl=/app/models/clip/t5xxl_fp16.safetensors \
+  --clip_l=/app/models/clip/clip_l.safetensors \
   --ae=/app/models/vae/ae.safetensors \
+  --train_data_dir=/app/data/train/img \
+  --logging_dir=/app/logs \
+  --output_dir=/app/outputs \
+  --output_name=qili \
+  --train_batch_size=2 \
   --bucket_no_upscale \
   --bucket_reso_steps=64 \
   --cache_latents \
   --cache_latents_to_disk \
   --caption_extension=".txt" \
-  --clip_l=/app/models/clip/clip_l.safetensors \
   --clip_skip=1 \
   --discrete_flow_shift=3.0 \
   --enable_bucket \
@@ -21,8 +28,8 @@
   --huber_c=0.1 \
   --huber_scale=1 \
   --huber_schedule=snr \
-  --logging_dir=/app/logs \
   --loss_type=l2 \
+  --unet_lr=0.0001 \
   --lr_scheduler=cosine_with_min_lr  \
   --lr_scheduler_num_cycles=2 \
   --lr_scheduler_power=1 \
@@ -39,16 +46,13 @@
   --mixed_precision=bf16 \
   --model_prediction_type=raw \
   --network_alpha=32 \
+  --network_dim=32 \
   --network_args="train_double_block_indices=all" \
   --network_args="train_single_block_indices=all" \
-  --network_dim=32 \
   --network_module=networks.lora_flux \
   --network_train_unet_only \
   --optimizer_type=PagedAdamW8bit \
   --optimizer_args weight_decay=0.01 betas=0.9,0.95 \
-  --output_dir=/app/outputs \
-  --output_name=qili \
-  --pretrained_model_name_or_path=/app/models/unet/flux1-dev-fp8.safetensors \
   --prior_loss_weight=1 \
   --resolution=1024,1024 \
   --sample_prompts=/app/outputs/sample/prompt.txt \
@@ -56,11 +60,7 @@
   --save_every_n_epochs=1 \
   --save_model_as=safetensors \
   --save_precision=bf16 \
-  --t5xxl=/app/models/clip/t5xxl_fp16.safetensors \
   --t5xxl_max_token_length=512 \
   --timestep_sampling=sigma \
-  --train_batch_size=2 \
-  --train_data_dir=/app/data/img \
-  --unet_lr=0.0001 \
   --wandb_run_name=qili \
   --xformers

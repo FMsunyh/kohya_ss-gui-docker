@@ -37,7 +37,7 @@ docker pull ghcr.io/bmaltais/kohya-ss-gui:latest
     训练数据 
     
     ```
-    /app/data/img
+    /app/data/train/img
     .
     └── 10_skm qili
         ├── 10x4096_4096x4096_flux.npz
@@ -78,8 +78,97 @@ docker pull ghcr.io/bmaltais/kohya-ss-gui:latest
     ```
     我不喜欢用界面，所以进入容器里面，直接命令行开启训练
 
+- 训练大模型
+```bash
+    /home/1000/.local/bin/accelerate launch \
+        --dynamo_backend=tensorrt \
+        --dynamo_mode=default \
+        --mixed_precision=bf16 \
+        --num_processes=1 \
+        --num_machines=1 \
+        --num_cpu_threads_per_process=2 \
+        /app/sd-scripts/flux_train.py \
+
+        --config_file  config_dreambooth.toml
+```
+
 
 - 启动训练
     ```
     bash train_flux_lora.sh
+    ```
+
+    写入脚本
+    ```bash
+    cat <<'EOF' > train_flux_lora.sh
+    #!/bin/bash
+
+    /home/1000/.local/bin/accelerate launch \
+        --dynamo_backend=tensorrt \
+        --dynamo_mode=default \
+        --mixed_precision=fp16 \
+        --num_processes=1 \
+        --num_machines=1 \
+        --num_cpu_threads_per_process=2 \
+        /app/sd-scripts/flux_train_network.py \
+        --pretrained_model_name_or_path=/app/models/unet/flux1-dev-fp8.safetensors \
+        --t5xxl=/app/models/clip/t5xxl_fp16.safetensors \
+        --clip_l=/app/models/clip/clip_l.safetensors \
+        --ae=/app/models/vae/ae.safetensors \
+        --train_data_dir=/app/data/train/img \
+        --logging_dir=/app/logs \
+        --output_dir=/app/outputs \
+        --output_name=qili \
+        --train_batch_size=2 \
+        --bucket_no_upscale \
+        --bucket_reso_steps=64 \
+        --cache_latents \
+        --cache_latents_to_disk \
+        --caption_extension=".txt" \
+        --clip_skip=1 \
+        --discrete_flow_shift=3.0 \
+        --enable_bucket \
+        --gradient_accumulation_steps=1 \
+        --guidance_scale=3.5 \
+        --huber_c=0.1 \
+        --huber_scale=1 \
+        --huber_schedule=snr \
+        --loss_type=l2 \
+        --unet_lr=0.0001 \
+        --lr_scheduler=cosine_with_min_lr  \
+        --lr_scheduler_num_cycles=2 \
+        --lr_scheduler_power=1 \
+        --lr_warmup_steps=0.1 \
+        --lr_decay_steps=0.5 \
+        --lr_scheduler_min_lr_ratio=0.1 \
+        --max_bucket_reso=2048 \
+        --max_data_loader_n_workers=0 \
+        --max_grad_norm=1 \
+        --max_timestep=1000 \
+        --max_train_epochs=10 \
+        --max_train_steps=10000 \
+        --min_bucket_reso=256 \
+        --mixed_precision=bf16 \
+        --model_prediction_type=raw \
+        --network_alpha=32 \
+        --network_args="train_double_block_indices=all" \
+        --network_args="train_single_block_indices=all" \
+        --network_dim=32 \
+        --network_module=networks.lora_flux \
+        --network_train_unet_only \
+        --optimizer_type=PagedAdamW8bit \
+        --optimizer_args weight_decay=0.01 betas=0.9,0.95 \
+        --prior_loss_weight=1 \
+        --resolution=1024,1024 \
+        --sample_prompts=/app/outputs/sample/prompt.txt \
+        --sample_sampler=euler_a \
+        --save_every_n_epochs=1 \
+        --save_model_as=safetensors \
+        --save_precision=bf16 \
+        --t5xxl_max_token_length=512 \
+        --timestep_sampling=sigma \
+        --wandb_run_name=qili \
+        --xformers
+    EOF
+
     ```

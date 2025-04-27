@@ -1,5 +1,10 @@
 # kohya_ss-gui-docker
 
+## 训练经验
+- 精度选择bf16(mixed_precision,save_precision, full_bf16)
+- 学习率 learning_rate = 2e-5，learning_rate_te = 2e-5
+- train_batch_size = 8/16 不清楚官方推荐是多少
+
 ## 拉取镜像
 
 这是kohya-ss提供的镜像，不再自己做镜像了
@@ -78,22 +83,18 @@ docker pull ghcr.io/bmaltais/kohya-ss-gui:latest
     ```
     我不喜欢用界面，所以进入容器里面，直接命令行开启训练
 
-- 训练大模型
+- 训练Flux.1大模型
 ```bash
-    /home/1000/.local/bin/accelerate launch \
-        --dynamo_backend=tensorrt \
-        --dynamo_mode=default \
-        --mixed_precision=bf16 \
-        --num_processes=1 \
-        --num_machines=1 \
-        --num_cpu_threads_per_process=2 \
-        /app/sd-scripts/flux_train.py \
+/home/1000/.local/bin/accelerate launch --dynamo_backend no --dynamo_mode default --mixed_precision bf16 --num_processes 1 --num_machines 1 --num_cpu_threads_per_process 2 /app/sd-scripts/flux_train.py --config_file /app/outputs/config_dreambooth-20250427-085645.toml
+```
 
-        --config_file  config_dreambooth.toml
+- 训练Flux.1 lora
+```bash
+/home/1000/.local/bin/accelerate launch --dynamo_backend no --dynamo_mode default --mixed_precision bf16 --num_processes 1 --num_machines 1 --num_cpu_threads_per_process 2 /app/sd-scripts/flux_train_network.py --config_file /app/outputs/config_lora-20250427-101924.toml
 ```
 
 
-- 启动训练
+- 训练Flux.1 lora 命令行启动训练
     ```
     bash train_flux_lora.sh
     ```

@@ -1,1 +1,0 @@
- /home/1000/.local/bin/accelerate launch --dynamo_backend no --dynamo_mode default --mixed_precision fp16 --num_processes 1 --num_machines 1 --num_cpu_threads_per_process 8 /app/sd-scripts/flux_train.py --config_file  /app/outputs/config_dreambooth-multi_gpu.toml

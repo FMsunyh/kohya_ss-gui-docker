@@ -40,6 +40,15 @@ docker pull ghcr.io/bmaltais/kohya-ss-gui:latest
 - 数据结构
     
     训练数据 
+    ```bash
+    cp 国风数据-8000张-img_txt/* "img-10k/10_sks person"
+    cp 国风数据-8000张/* "img-10k/10_sks person"
+    cp 周愚昧-img_txt/* "img-10k/10_sks person" 
+    cp 周愚昧-img/* "img-10k/10_sks person" 
+
+    find "img-10k/10_sks person" -type f -name "*.txt" | wc -l
+    find "img-10k/10_sks person" -type f -name "*.png" | wc -l
+    ```
     
     ```
     /app/data/train/img

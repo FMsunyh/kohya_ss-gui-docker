@@ -12,12 +12,11 @@ RUN groupadd -g ${UID} ${USERNAME} && \
     useradd -l -u ${UID} -g ${UID} -m -s /bin/bash -N ${USERNAME}
 
 # 将 /home/1000 目录和文件的所有者改为 1001 用户
-RUN mv /home/1000 /home/1001 && \
-    chown -R 1001:1001 /home/1001
+# RUN mv /home/1000 /home/1001 && \
+#     chown -R 1001:1001 /home/1001
 
 # 修改 /app 目录的权限，确保新用户可以访问
-RUN chown -R 1001:1001 /app
-
+RUN chown -R 1001:1001  /home/1000 /app
 
 # 切换默认用户
 USER aigc

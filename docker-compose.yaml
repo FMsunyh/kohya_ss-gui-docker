@@ -2,13 +2,13 @@ services:
   kohya-ss-gui:
     container_name: kohya-ss-gui
     image: ghcr.io/bmaltais/kohya-ss-gui:latest
-    # user: 1000:0
+    user: 1001:1001
     # command: [ "python3", "kohya_gui.py", "--listen", "0.0.0.0", "--server_port", "7860", "--headless", "--noverify" ]
     build:
       context: .
       dockerfile: Dockerfile
-      # args:
-      #   - UID=1000
+      args:
+        - UID=1001
       cache_from:
         - ghcr.io/bmaltais/kohya-ss-gui:cache
       cache_to:
@@ -31,10 +31,10 @@ services:
       # - ./models:/app/models
       - ./.cache/config:/app/config
       - ./.cache/user:/home/1000/.cache
-      - ./.cache/triton:/home/1000/.triton
-      - ./.cache/nv:/home/1000/.nv
-      - ./.cache/keras:/home/1000/.keras
-      - ./.cache/config:/home/1000/.config # For backward compatibility
+      - ./.cache/triton:/home/1001/.triton
+      - ./.cache/nv:/home/1001/.nv
+      - ./.cache/keras:/home/1001/.keras
+      - ./.cache/config:/home/1001/.config # For backward compatibility
     deploy:
       resources:
         reservations:

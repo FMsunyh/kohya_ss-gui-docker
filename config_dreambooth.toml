@@ -8,8 +8,8 @@ output_dir = "/app/outputs"
 output_name = "国风大模型"
 wandb_run_name = "国风大模型"
 epoch = 20
-learning_rate = 5e-5
-learning_rate_te = 5e-5
+learning_rate = 2e-6
+learning_rate_te = 2e-6
 optimizer_type = "Adafactor"
 optimizer_args = [ "relative_step=False,", "scale_parameter=False,", "warmup_init=False",]
 mixed_precision = "bf16"

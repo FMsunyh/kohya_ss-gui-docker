@@ -1,5 +1,5 @@
 services:
-  kohya-ss-gui:
+  kohya-ss-gui6:
     container_name: kohya-ss-gui6
     image: ghcr.io/bmaltais/kohya-ss-gui:latest
     user: 1001:1001
@@ -14,7 +14,7 @@ services:
       cache_to:
         - type=inline
     ports:
-      - 62899:7860
+      - 62900:7860
     environment:
       SAFETENSORS_FAST_GPU: 1
       TENSORBOARD_PORT: ${TENSORBOARD_PORT:-6006}

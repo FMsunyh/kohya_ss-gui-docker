@@ -1,6 +1,8 @@
 # Dockerfile
 FROM ghcr.io/bmaltais/kohya-ss-gui:latest
 
+USER root
+
 # 创建一个1001的用户，名字叫 aigc
 RUN useradd -u 1001 -m aigc
 

@@ -92,93 +92,40 @@ docker pull ghcr.io/bmaltais/kohya-ss-gui:latest
     ```
     我不喜欢用界面，所以进入容器里面，直接命令行开启训练
 
+## Flux.1 funeting | lora 
 - 训练Flux.1大模型
 ```bash
-/home/1000/.local/bin/accelerate launch --dynamo_backend no --dynamo_mode default --mixed_precision bf16 --num_processes 1 --num_machines 1 --num_cpu_threads_per_process 2 /app/sd-scripts/flux_train.py --config_file /app/outputs/config_dreambooth-20250427-085645.toml
+/home/1000/.local/bin/accelerate launch --dynamo_backend no --dynamo_mode default --mixed_precision bf16 --num_processes 1 --num_machines 1 --num_cpu_threads_per_process 2 /app/sd-scripts/flux_train.py --config_file /app/outputs/config_dreambooth-20250427-085645.toml 2>&1 | tee outputs/logs.txt
 ```
 
 - 训练Flux.1 lora
 ```bash
-/home/1000/.local/bin/accelerate launch --dynamo_backend no --dynamo_mode default --mixed_precision bf16 --num_processes 1 --num_machines 1 --num_cpu_threads_per_process 2 /app/sd-scripts/flux_train_network.py --config_file /app/outputs/config_lora-20250427-101924.toml
+/home/1000/.local/bin/accelerate launch --dynamo_backend no --dynamo_mode default --mixed_precision bf16 --num_processes 1 --num_machines 1 --num_cpu_threads_per_process 2 /app/sd-scripts/flux_train_network.py --config_file /app/outputs/config_lora-20250427-101924.toml 2>&1 | tee outputs/logs.txt
 ```
 
+- 测试Lora
+- 拷贝到comfyui
+```bash
+cp /dev/shm/workspace/kohya_ss-gui-docker/dataset/outputs/models/*.safetensors  /dev/shm/workspace/comfyui-docker/volumes/comfyui-dev/data/models/loras
+```
 
-- 训练Flux.1 lora 命令行启动训练
-    ```
-    bash train_flux_lora.sh
-    ```
+- 融合Flux.1 lora
+- 分别融合三个版本 bf16,fp16,fp8
+```bash
+cd /app/sd-scripts
+/usr/local/bin/python3 /app/sd-scripts/networks/flux_merge_lora.py --flux_model /app/models/unet/flux1-dev.safetensors --save_precision bf16 --precision bf16 --save_to /app/outputs/merge_models/F.1-国风汉服-鹤羽谣-bf16.safetensors --loading_device cuda --working_device cuda --models /app/outputs/models/国风lora-img-13k-Adafactor-LR1e-4-B2-Dim128-000003.safetensors --ratios 1
+/usr/local/bin/python3 /app/sd-scripts/networks/flux_merge_lora.py --flux_model /app/models/unet/flux1-dev.safetensors --save_precision fp16 --precision bf16 --save_to /app/outputs/merge_models/F.1-国风汉服-鹤羽谣-fp16.safetensors --loading_device cuda --working_device cuda --models /app/outputs/models/国风lora-img-13k-Adafactor-LR1e-4-B2-Dim128-000003.safetensors --ratios 1
+/usr/local/bin/python3 /app/sd-scripts/networks/flux_merge_lora.py --flux_model /app/models/unet/flux1-dev.safetensors --save_precision fp8 --precision bf16 --save_to /app/outputs/merge_models/F.1-国风汉服-鹤羽谣-fp8.safetensors --loading_device cuda --working_device cuda --models /app/outputs/models/国风lora-img-13k-Adafactor-LR1e-4-B2-Dim128-000003.safetensors --ratios 1
+```
 
-    写入脚本
-    ```bash
-    cat <<'EOF' > train_flux_lora.sh
-    #!/bin/bash
+- 拷贝到comfyui
+```bash
+cp /dev/shm/workspace/kohya_ss-gui-docker/dataset/outputs/merge_models/* /dev/shm/workspace/comfyui-docker/volumes/comfyui-dev/data/models/unet 
+```
 
-    /home/1000/.local/bin/accelerate launch \
-        --dynamo_backend=tensorrt \
-        --dynamo_mode=default \
-        --mixed_precision=fp16 \
-        --num_processes=1 \
-        --num_machines=1 \
-        --num_cpu_threads_per_process=2 \
-        /app/sd-scripts/flux_train_network.py \
-        --pretrained_model_name_or_path=/app/models/unet/flux1-dev-fp8.safetensors \
-        --t5xxl=/app/models/clip/t5xxl_fp16.safetensors \
-        --clip_l=/app/models/clip/clip_l.safetensors \
-        --ae=/app/models/vae/ae.safetensors \
-        --train_data_dir=/app/data/train/img \
-        --logging_dir=/app/logs \
-        --output_dir=/app/outputs \
-        --output_name=qili \
-        --train_batch_size=2 \
-        --bucket_no_upscale \
-        --bucket_reso_steps=64 \
-        --cache_latents \
-        --cache_latents_to_disk \
-        --caption_extension=".txt" \
-        --clip_skip=1 \
-        --discrete_flow_shift=3.0 \
-        --enable_bucket \
-        --gradient_accumulation_steps=1 \
-        --guidance_scale=3.5 \
-        --huber_c=0.1 \
-        --huber_scale=1 \
-        --huber_schedule=snr \
-        --loss_type=l2 \
-        --unet_lr=0.0001 \
-        --lr_scheduler=cosine_with_min_lr  \
-        --lr_scheduler_num_cycles=2 \
-        --lr_scheduler_power=1 \
-        --lr_warmup_steps=0.1 \
-        --lr_decay_steps=0.5 \
-        --lr_scheduler_min_lr_ratio=0.1 \
-        --max_bucket_reso=2048 \
-        --max_data_loader_n_workers=0 \
-        --max_grad_norm=1 \
-        --max_timestep=1000 \
-        --max_train_epochs=10 \
-        --max_train_steps=10000 \
-        --min_bucket_reso=256 \
-        --mixed_precision=bf16 \
-        --model_prediction_type=raw \
-        --network_alpha=32 \
-        --network_args="train_double_block_indices=all" \
-        --network_args="train_single_block_indices=all" \
-        --network_dim=32 \
-        --network_module=networks.lora_flux \
-        --network_train_unet_only \
-        --optimizer_type=PagedAdamW8bit \
-        --optimizer_args weight_decay=0.01 betas=0.9,0.95 \
-        --prior_loss_weight=1 \
-        --resolution=1024,1024 \
-        --sample_prompts=/app/outputs/sample/prompt.txt \
-        --sample_sampler=euler_a \
-        --save_every_n_epochs=1 \
-        --save_model_as=safetensors \
-        --save_precision=bf16 \
-        --t5xxl_max_token_length=512 \
-        --timestep_sampling=sigma \
-        --wandb_run_name=qili \
-        --xformers
-    EOF
+## SD3.5 funeting | lora 
 
-    ```
+- 训练SD3.5 lora
+```bash
+/home/1000/.local/bin/accelerate launch --dynamo_backend no --dynamo_mode default --mixed_precision bf16 --num_processes 1 --num_machines 1 --num_cpu_threads_per_process 2 /app/sd-scripts/sd3_train_network.py --config_file /app/outputs/config_lora.toml 2>&1 | tee outputs/logs.txt
+```

@@ -22,6 +22,7 @@ services:
       - /tmp
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./config:/app/myconfig
       - ./models:/app/models
       - ./dataset:/dataset
       - ./dataset/images:/app/data

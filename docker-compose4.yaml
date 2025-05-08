@@ -1,6 +1,6 @@
 services:
-  kohya-ss-gui6:
-    container_name: kohya-ss-gui6
+  kohya-ss-gui4:
+    container_name: kohya-ss-gui4
     image: ghcr.io/bmaltais/kohya-ss-gui:latest
     user: 1001:1001
     # command: [ "python3", "kohya_gui.py", "--listen", "0.0.0.0", "--server_port", "7860", "--headless", "--noverify" ]
@@ -14,7 +14,7 @@ services:
       cache_to:
         - type=inline
     ports:
-      - 62900:7860
+      - 62902:7860
     environment:
       SAFETENSORS_FAST_GPU: 1
       TENSORBOARD_PORT: ${TENSORBOARD_PORT:-6006}
@@ -22,8 +22,8 @@ services:
       - /tmp
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - ./models:/app/models
       - ./config:/app/myconfig
+      - ./models:/app/models
       - ./dataset:/dataset
       - ./dataset/images:/app/data
       - ./dataset/logs:/app/logs
@@ -42,20 +42,21 @@ services:
           devices:
             - driver: nvidia
               capabilities: [ gpu ]
-              device_ids: [ "6" ]
-  # tensorboard:
-  #   container_name: tensorboard
-  #   image: tensorflow/tensorflow:latest-gpu
-  #   ports:
-  #     # !Please change the port in .env file
-  #     - ${TENSORBOARD_PORT:-6006}:6006
-  #   volumes:
-  #     - ./dataset/logs:/app/logs
-  #   command: tensorboard --logdir=/app/logs --bind_all
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - driver: nvidia
-  #             capabilities: [ gpu ]
-  #             device_ids: [ "5" ]
+              device_ids: [ "7" ]
+
+  tensorboard:
+    container_name: tensorboard
+    image: tensorflow/tensorflow:latest-gpu
+    ports:
+      # !Please change the port in .env file
+      - ${TENSORBOARD_PORT:-6006}:6006
+    volumes:
+      - ./dataset/logs:/app/logs
+    command: tensorboard --logdir=/app/logs --bind_all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ gpu ]
+              device_ids: [ "5" ]

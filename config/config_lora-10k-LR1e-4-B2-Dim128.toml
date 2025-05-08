@@ -9,6 +9,7 @@ output_name = "国风lora-LR1e-4-B2-Dim128"
 train_batch_size = 2
 save_every_n_epochs = 1
 optimizer_type = "AdamW8bit"
+optimizer_args = []
 learning_rate = 1e-4
 text_encoder_lr = [ 1e-5, 1e-5,]
 lr_scheduler = "constant_with_warmup"
@@ -48,7 +49,6 @@ model_prediction_type = "raw"
 network_args = [ "train_double_block_indices=all", "train_single_block_indices=all",]
 network_module = "networks.lora_flux"
 noise_offset_type = "Original"
-optimizer_args = []
 prior_loss_weight = 1
 resolution = "1024,1024"
 sample_prompts = "/app/outputs/sample/prompt.txt"

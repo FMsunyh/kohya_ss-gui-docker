@@ -42,7 +42,7 @@ services:
           devices:
             - driver: nvidia
               capabilities: [ gpu ]
-              device_ids: [ "7" ]
+              device_ids: [ "0" ]
 
   tensorboard:
     container_name: tensorboard
@@ -59,4 +59,4 @@ services:
           devices:
             - driver: nvidia
               capabilities: [ gpu ]
-              device_ids: [ "5" ]
+              device_ids: [ "0" ]

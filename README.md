@@ -12,6 +12,13 @@
 docker pull ghcr.io/bmaltais/kohya-ss-gui:latest
 ```
 
+## FP8训练需要更新torch版本
+```
+pip uninstall torch torchvision torchaudio xformers -y
+pip install torch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 --index-url https://download.pytorch.org/whl/cu121
+pip install xformers==0.0.26.post1
+```
+
 ## 配置
 - 映射目录权限
     ```

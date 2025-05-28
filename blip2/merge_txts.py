@@ -13,7 +13,7 @@ def merge_txt_files(input_dir: Path, output_file: Path):
             with file.open("r", encoding="utf-8") as infile:
                 content = infile.read()
                 # outfile.write(f"--- 内容来自：{file.name} ---\n")
-                outfile.write(content + "\n\n")
+                outfile.write(content + "\n")
 
     print(f"合并完成，输出文件为：{output_file}")
 
